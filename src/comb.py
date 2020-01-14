@@ -152,13 +152,15 @@ class Tabu:
             self.best_tour = curr_tour
             self.cost_history.append((round(time.time() - self.start_time, 2), self.best_cost))
 
-    def batch_tabu(self, times=10, stopping_criteria=50):
+    def batch_tabu(self, times=10, stopping_criteria=10):
         start_time = time.time()
         for i in range(1, times + 1):
             random.seed(tabu.seed + i)
             if time.time() - start_time < self.limited_time:
                 print(f"Iteration {i}/{times} -------------------------------")
-                greedy_tour, _ = greedy(self)
+                greedy_tour, first = greedy(self)
+                print("FIRST:", first)
+                print(greedy_tour[0])
                 self.tabu(curr_tour=greedy_tour, stopping_criteria=stopping_criteria)
                 print("Best cost obtained: ", self.best_cost)
                 print("Best tour", self.best_tour)
