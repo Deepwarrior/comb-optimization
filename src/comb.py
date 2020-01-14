@@ -12,7 +12,7 @@ for folder in os.listdir(data_dir):
     problems[folder] = os.path.join(data_dir, folder, folder)
 
 print(problems)
-PROBLEM = "ftv55.atsp"
+PROBLEM = "berlin52.tsp"
 
 def read(input_name):
     '''
@@ -53,7 +53,7 @@ def atspread(input_name):
     return data
 
 
-problem = atspread(problems[PROBLEM])
+problem = read(problems[PROBLEM])
 
 def dist(node1, node2):
     return norm(np.array(node1[1:]) - np.array(node2[1:]))
@@ -67,7 +67,7 @@ def greedy(self):
     remain_nodes.remove(cur_node)
 
     while remain_nodes:
-        next_node = min(remain_nodes, key=lambda x: self.distance[cur_node][x])
+        next_node = min(remain_nodes, key=lambda x: dist(self.distance[cur_node], self.distance[x]))
         remain_nodes.remove(next_node)
         solution.append(next_node)
         cur_node = next_node
@@ -83,7 +83,7 @@ def greedy(self):
 def get_total_dist(self, tour):
     cur_total_dis = 0
     for i in range(self.N):
-        cur_total_dis += self.distance[tour[i % self.N]][tour[(i + 1) % self.N]]
+        cur_total_dis += dist(self.distance[tour[i % self.N]], self.distance[tour[(i + 1) % self.N]])
     return cur_total_dis
 
 class Tabu:
