@@ -12,7 +12,7 @@ for folder in os.listdir(data_dir):
     problems[folder] = os.path.join(data_dir, folder, folder)
 
 print(problems)
-PROBLEM = "berlin52.tsp"
+PROBLEM = "eil76.tsp"
 
 def read(input_name):
     '''
@@ -196,7 +196,7 @@ tabu.set_seed(17)
 
 
 class Simulated_annealing:
-    def __init__(self, distance, limited_time = 600, T=-1,  cooling_rate=-1, stopping_T=-1):
+    def __init__(self, distance, limited_time = 1800, T=-1,  cooling_rate=-1, stopping_T=-1):
         self.distance = distance
         self.N = len(distance)
         self.T = math.sqrt(self.N) if T == -1 else T
