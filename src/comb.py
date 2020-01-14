@@ -11,7 +11,7 @@ for folder in os.listdir(data_dir):
     problems[folder] = os.path.join(data_dir, folder, folder)
 
 print(problems)
-PROBLEM = "berlin52.tsp"
+PROBLEM = "ftv55.atsp"
 
 def read(input_name):
     '''
@@ -33,7 +33,26 @@ def read(input_name):
         cords.append([int(node_id), float(x), float(y)])
     return cords
 
-problem = read(problems[PROBLEM])
+def atspread(input_name):
+    with open(input_name, "r") as fp:
+        content = fp.read().split()
+    idx = content.index('DIMENSION:') + 1
+    n = int(content[idx])
+    idx = content.index('EDGE_WEIGHT_FORMAT:') + 1
+    if content[idx] != 'FULL_MATRIX':
+        return [], 0
+    idx = content.index('EDGE_WEIGHT_SECTION') + 1
+    data = []
+    for i in range(n):
+        if len(content) > idx + n:
+            data.append(list(map(int, content[idx:idx + n])))
+        else:
+            return [], 0
+        idx += n
+    return data
+
+
+problem = atspread(problems[PROBLEM])
 
 def dist(node1, node2):
     return norm(np.array(node1[1:]) - np.array(node2[1:]))
@@ -47,7 +66,7 @@ def greedy(self):
     remain_nodes.remove(cur_node)
 
     while remain_nodes:
-        next_node = min(remain_nodes, key=lambda x: dist(self.distance[cur_node], self.distance[x]))
+        next_node = min(remain_nodes, key=lambda x: self.distance[cur_node][x])
         remain_nodes.remove(next_node)
         solution.append(next_node)
         cur_node = next_node
@@ -63,7 +82,7 @@ def greedy(self):
 def get_total_dist(self, tour):
     cur_total_dis = 0
     for i in range(self.N):
-        cur_total_dis += dist(self.distance[tour[i % self.N]], self.distance[tour[(i + 1) % self.N]])
+        cur_total_dis += self.distance[tour[i % self.N]][tour[(i + 1) % self.N]]
     return cur_total_dis
 
 class Tabu:
